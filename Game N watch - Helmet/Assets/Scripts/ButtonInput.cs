@@ -23,7 +23,7 @@ public class ButtonInput : MonoBehaviour
     public static ButtonPress PressLeft;
     public static ButtonPress PressRight;
 
-        private void OnMousDown()
+        private void OnMouseDown()
         {
             
             if (PressLeft != null && button == Button.left) //Kollar att det faktiskt är någon som premunerar på eventet
