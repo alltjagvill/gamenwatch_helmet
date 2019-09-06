@@ -48,7 +48,7 @@ public class HelmetController : MonoBehaviour
         movePosition(currentPosition);
         }
 
-        Debug.Log("Pressed left!");
+        
 
 
     }
@@ -64,7 +64,7 @@ public class HelmetController : MonoBehaviour
             currentPosition ++;
             movePosition(currentPosition);
         }
-        Debug.Log("Pressed right!");
+        
 
     }
     
