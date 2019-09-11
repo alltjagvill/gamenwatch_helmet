@@ -5,7 +5,8 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public delegate void GameManagerEvent();
+    public static event GameManagerEvent OnGameOver;
     public int lifes = 3;
     public int score = 0;
     public float doorClosedDelay = 100.0f;
@@ -18,12 +19,17 @@ public class GameManager : MonoBehaviour
     private bool doorClosed = false;
 
 
-    public bool isDoorClosed()
+    void OnEnable()
+
     {
-        return doorClosed;
+        ToolsController.OnHelmetKill += RemoveLife;
     }
         
-     
+    void OnDisable()
+    {
+        
+            ToolsController.OnHelmetKill -= RemoveLife;
+    }
 
     void Start()
     {
@@ -41,11 +47,18 @@ public class GameManager : MonoBehaviour
     {
         doorClosed = true;
         closedDoor.SetActive(true);
+        Debug.Log("Door closed: " + doorClosed);
         lastClosedDoor = Time.time;
         yield return new WaitForSeconds(doorClosedTime);
         doorClosed = false;
+        Debug.Log("Door closed: " + doorClosed);
         closedDoor.SetActive(false);
 
+    }
+
+    public bool isDoorClosed()
+    {
+        return doorClosed;
     }
 
     public void addScore()
@@ -53,5 +66,34 @@ public class GameManager : MonoBehaviour
         score++;
         scoreText.text = score.ToString();
         
+    }
+
+    public int getScore()
+    {
+        return score;
+    }
+
+    private void RemoveLife()
+    {
+        if (lifes <= 1)
+        {
+            GameOver();
+        }
+        else
+        {
+            lifes--;
+            Debug.Log("Lifes: " + lifes);
+        }
+    }
+
+    private void GameOver()
+    {
+        if (OnGameOver != null) 
+        {
+            OnGameOver();
+        }
+
+        Debug.Log("Game Over!");
+        Debug.Log("Lifes: " + lifes);
     }
 }

@@ -9,6 +9,7 @@ public class ToolSpawner : MonoBehaviour
 
   public float spawnDelay = 4.0f;
   private float lastSpawnTime;
+  public float scoreDelayInterval = 0.01f;
 
   public List<Transform> spawn0 = new List<Transform>();
   public List<Transform> spawn1 = new List<Transform>();
@@ -39,7 +40,9 @@ public class ToolSpawner : MonoBehaviour
 
   void Update()
   {
-    if (Time.time > lastSpawnTime + spawnDelay)
+    int scoreDelay = gameManager.getScore();
+    float punishDelay = scoreDelay * scoreDelayInterval;
+        if (Time.time > lastSpawnTime + (spawnDelay - punishDelay))
     {
         spawnTool();
     }

@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class ToolsController : MonoBehaviour
 {
-   
+
+    public delegate void Tool();
+    public static event Tool OnHelmetKill;
 
     public int currentPosition = 0;
 
@@ -13,6 +15,8 @@ public class ToolsController : MonoBehaviour
 
     private bool touchedGround = false;
     public List<Transform> spawnPoint = new List<Transform>();
+
+    public LayerMask layerMask;
     
 
     void Start()
@@ -62,6 +66,20 @@ public class ToolsController : MonoBehaviour
     private void UpdatePosition()
     {
         transform.position = spawnPoint[currentPosition].transform.position;
+        if(spawnPoint[currentPosition].gameObject.tag == "HitPosition")
+        {
+            RaycastHit2D helmetHit = Physics2D.Raycast(transform.position, Vector2.down, Mathf.Infinity, layerMask);
+
+            if (helmetHit.collider != null)
+            {
+                if (OnHelmetKill != null)
+                {
+                    OnHelmetKill();
+                }
+            }
+        }
 
     }
+
+    
 }

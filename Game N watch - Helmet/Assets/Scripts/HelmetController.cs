@@ -7,11 +7,13 @@ public class HelmetController : MonoBehaviour
     public GameManager gameManager;
     public List<GameObject> positions = new List<GameObject>();
     public List<Sprite> helmetSprites = new List<Sprite>();
+    public Sprite deadHelmet;
 
     private Vector3 startPosition;
     private int currentPosition;
     public float spriteScaleX = 7.0f;
     public float spriteScaleY = 9.0f;
+    public float deadAnimationTimer = 1.0f;
 
     private SpriteRenderer spriteRenderer;
     //private float startPostition = position[0.];
@@ -21,12 +23,16 @@ public class HelmetController : MonoBehaviour
     {
         ButtonInput.PressLeft += pressedLeft;
         ButtonInput.PressRight += pressedRight;
+        ToolsController.OnHelmetKill += InitializeKillHelmet;
+        GameManager.OnGameOver += GameOver;
     }
 
     private void OnDisable()
     {
         ButtonInput.PressLeft -= pressedLeft;
         ButtonInput.PressRight -= pressedRight;
+        ToolsController.OnHelmetKill -= InitializeKillHelmet;
+        GameManager.OnGameOver += GameOver;
     }
     private void Start()
     {
@@ -108,6 +114,24 @@ public class HelmetController : MonoBehaviour
         spriteRenderer.sprite = helmetSprites[position];
         transform.localScale = new Vector3(spriteScaleX, spriteScaleY, 1);
         }
+    }
+
+    private void InitializeKillHelmet()
+    {
+        StartCoroutine(KillHelmet());
+    }
+    IEnumerator KillHelmet()
+    {
+        spriteRenderer.sprite = deadHelmet;
+        transform.localScale = new Vector3(spriteScaleY, spriteScaleX, 1);
+        yield return new WaitForSeconds(deadAnimationTimer);
+        GoToStart();
+
+    }
+
+    private void GameOver()
+    {
+        Destroy(this);
     }
     
 
