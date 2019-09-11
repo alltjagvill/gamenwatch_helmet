@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class HelmetController : MonoBehaviour
 {
+    public GameManager gameManager;
     public List<GameObject> positions = new List<GameObject>();
     public List<Sprite> helmetSprites = new List<Sprite>();
 
@@ -29,6 +30,7 @@ public class HelmetController : MonoBehaviour
     }
     private void Start()
     {
+        //gameManager = GetComponent<GameManager>();
         currentPosition = 0;
         startPosition = positions[0].transform.position;
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
@@ -42,7 +44,7 @@ public class HelmetController : MonoBehaviour
 
     public void pressedLeft()
     {
-        if (currentPosition > 0)
+        if (currentPosition > 1)
         {
         currentPosition --;
         movePosition(currentPosition);
@@ -57,11 +59,21 @@ public class HelmetController : MonoBehaviour
     {
         if (currentPosition == positions.Count -1)
         {
+            gameManager.addScore();
             GoToStart();
         }
-        else 
+        else if (currentPosition == positions.Count -2 )
         {
-            currentPosition ++;
+            
+            bool closedDoor = gameManager.isDoorClosed();
+            if (closedDoor == false)
+                currentPosition++;
+            movePosition(currentPosition);
+        }
+
+        else
+        {
+            currentPosition++;
             movePosition(currentPosition);
         }
         

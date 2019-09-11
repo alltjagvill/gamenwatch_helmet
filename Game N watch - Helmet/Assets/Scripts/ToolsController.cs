@@ -4,11 +4,7 @@ using UnityEngine;
 
 public class ToolsController : MonoBehaviour
 {
-    public List<Transform> spawn0 = new List<Transform>();
-    public List<Transform> spawn1 = new List<Transform>();
-    public List<Transform> spawn2 = new List<Transform>();
-    public List<Transform> spawn3 = new List<Transform>();
-    public List<Transform> spawn4 = new List<Transform>();
+   
 
     public int currentPosition = 0;
 
@@ -16,15 +12,19 @@ public class ToolsController : MonoBehaviour
     private Vector3 startPosition;
 
     private bool touchedGround = false;
+    public List<Transform> spawnPoint = new List<Transform>();
+    
 
     void Start()
     {
+     
         //startPosition = spawn0[0].transform.position;
         //MoveToNextPosition();
 
-        Debug.Log("Spawn0 length: " + spawn0.Count);
-        UpdatePosition();
-        StartCoroutine(MoveTool());
+   //     Debug.Log("Spawn0 length: " + spawn0.Count);
+   //Debug.Log("Listpos: " + spawnPoint[0].position);
+      UpdatePosition();
+      StartCoroutine(MoveTool());
     }
 
     IEnumerator MoveTool()
@@ -41,8 +41,8 @@ public class ToolsController : MonoBehaviour
     private void MoveToNextPosition()
     {
         currentPosition++;
-        Debug.Log("Current position: " + currentPosition);
-        if (currentPosition >= spawn0.Count)
+        
+        if (currentPosition >= spawnPoint.Count)
         {
             DestroyTool();
         }
@@ -55,13 +55,13 @@ public class ToolsController : MonoBehaviour
     
     private void DestroyTool()
     {
-        GameObject toolParent = transform.parent.gameObject;
-        Destroy(toolParent);
+        //GameObject toolParent = transform.parent.gameObject;
+        Destroy(transform.gameObject);
     }
 
     private void UpdatePosition()
     {
-        transform.position = spawn0[currentPosition].transform.position;
+        transform.position = spawnPoint[currentPosition].transform.position;
 
     }
 }
