@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class GameManager : MonoBehaviour
@@ -13,9 +14,12 @@ public class GameManager : MonoBehaviour
     public float doorClosedTime = 3.0f;
     float lastClosedDoor;
     public GameObject closedDoor;
+    public GameObject gameOverSign;
     public TextMeshPro scoreText;
+    public LifeController lifeController;
+    private string mainScene = "Main";
 
-
+    private bool isGameOver = false;
     private bool doorClosed = false;
 
 
@@ -33,12 +37,14 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        
+
+        lifeController.CreateLifes(lifes);
+       
     }
 
     void Update()
     {
-        if (Time.time > lastClosedDoor + doorClosedDelay)
+        if (Time.time > lastClosedDoor + doorClosedDelay && isGameOver == false)
         {
             StartCoroutine (CloseDoor());
         }
@@ -82,7 +88,7 @@ public class GameManager : MonoBehaviour
         else
         {
             lifes--;
-            Debug.Log("Lifes: " + lifes);
+            lifeController.RemoveLife();
         }
     }
 
@@ -91,9 +97,18 @@ public class GameManager : MonoBehaviour
         if (OnGameOver != null) 
         {
             OnGameOver();
+            isGameOver = true;
+            closedDoor.SetActive(false);
+            gameOverSign.SetActive(true);
         }
 
         Debug.Log("Game Over!");
         Debug.Log("Lifes: " + lifes);
     }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(mainScene);
+    }
+
 }

@@ -10,6 +10,7 @@ public class ToolSpawner : MonoBehaviour
   public float spawnDelay = 4.0f;
   private float lastSpawnTime;
   public float scoreDelayInterval = 0.01f;
+  private bool enableSpawn = true;
 
   public List<Transform> spawn0 = new List<Transform>();
   public List<Transform> spawn1 = new List<Transform>();
@@ -23,7 +24,16 @@ public class ToolSpawner : MonoBehaviour
   public GameManager gameManager;
 
 
-  void Start()
+  void OnEnable()
+    {
+        GameManager.OnGameOver += DisableSpawn;
+    }
+
+  void OnDisable()
+    {
+        GameManager.OnGameOver -= DisableSpawn;
+    }
+    void Start()
   {
     if (toolPrefab == null)
     return;
@@ -52,14 +62,20 @@ public class ToolSpawner : MonoBehaviour
 
   private void spawnTool()
   {
-    lastSpawnTime = Time.time;
-    randomSpawnPoint = Random.Range(0, spawnPoints.Count);
-    List<Transform> currentSpawnPoint = spawnPoints[randomSpawnPoint];    
-    GameObject tool = Instantiate(toolPrefab);
-    ToolsController toolsController = tool.GetComponent<ToolsController>();
-    
-    toolsController.spawnPoint = currentSpawnPoint;
+        if (enableSpawn == true)
+        {
+            lastSpawnTime = Time.time;
+            randomSpawnPoint = Random.Range(0, spawnPoints.Count);
+            List<Transform> currentSpawnPoint = spawnPoints[randomSpawnPoint];
+            GameObject tool = Instantiate(toolPrefab);
+            ToolsController toolsController = tool.GetComponent<ToolsController>();
+
+            toolsController.spawnPoint = currentSpawnPoint;
+        }
   }
 
- 
+    private void DisableSpawn()
+    {
+        enableSpawn = false;
+    }
 }

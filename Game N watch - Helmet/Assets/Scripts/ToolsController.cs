@@ -18,7 +18,15 @@ public class ToolsController : MonoBehaviour
 
     public LayerMask layerMask;
     
+    void OnEnable()
+    {
+        GameManager.OnGameOver += DestroyTool;
+    }
 
+    void OnDisable()
+    {
+        GameManager.OnGameOver -= DestroyTool;
+    }
     void Start()
     {
      

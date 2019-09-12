@@ -5,6 +5,7 @@ using UnityEngine;
 public class HelmetController : MonoBehaviour
 {
     public GameManager gameManager;
+    public SoundController soundController;
     public List<GameObject> positions = new List<GameObject>();
     public List<Sprite> helmetSprites = new List<Sprite>();
     public Sprite deadHelmet;
@@ -52,8 +53,9 @@ public class HelmetController : MonoBehaviour
     {
         if (currentPosition > 1)
         {
-        currentPosition --;
-        movePosition(currentPosition);
+            soundController.PlayMoveSound();
+            currentPosition --;
+            movePosition(currentPosition);
         }
 
         
@@ -66,6 +68,7 @@ public class HelmetController : MonoBehaviour
         if (currentPosition == positions.Count -1)
         {
             gameManager.addScore();
+            soundController.PlayClearSound();
             GoToStart();
         }
         else if (currentPosition == positions.Count -2 )
@@ -79,6 +82,7 @@ public class HelmetController : MonoBehaviour
 
         else
         {
+            soundController.PlayMoveSound();
             currentPosition++;
             movePosition(currentPosition);
         }
@@ -122,10 +126,14 @@ public class HelmetController : MonoBehaviour
     }
     IEnumerator KillHelmet()
     {
+        ButtonInput.PressLeft -= pressedLeft;
+        ButtonInput.PressRight -= pressedRight;
         spriteRenderer.sprite = deadHelmet;
         transform.localScale = new Vector3(spriteScaleY, spriteScaleX, 1);
         yield return new WaitForSeconds(deadAnimationTimer);
         GoToStart();
+        ButtonInput.PressLeft += pressedLeft;
+        ButtonInput.PressRight += pressedRight;
 
     }
 
